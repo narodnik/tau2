@@ -2,6 +2,7 @@
 import asyncio, json, os, sys, tempfile
 from datetime import datetime
 from tabulate import tabulate
+from colorama import Fore, Back, Style
 
 import api, lib
 
@@ -104,11 +105,15 @@ def convert_attr_val(attr, val):
 
 async def show_active_tasks():
     tasks = await api.fetch_active_tasks()
-    headers = ["ID", "Title", "Project", "Tags", "Assigned", "Rank", "Due"]
+    headers = ["ID", "Title", "Status", "Project",
+               "Tags", "Assigned", "Rank", "Due"]
     table = []
     for id, task in enumerate(tasks):
         if task is None:
             continue
+        title = task["title"]
+        status = task["status"]
+        project = task["project"]
         tags = " ".join(f"+{tag}" for tag in task["tags"])
         assigned = " ".join(f"@{assign}" for assign in task["assigned"])
         if task["due"] is None:
@@ -116,13 +121,35 @@ async def show_active_tasks():
         else:
             dt = lib.util.unix_to_datetime(task["due"])
             due = dt.strftime("%H:%M %d/%m/%y")
+        rank = task["rank"] if task["rank"] is not None else ""
+
+        if status == "start":
+            id =        Fore.GREEN + str(id)        + Style.RESET_ALL
+            title =     Fore.GREEN + str(title)     + Style.RESET_ALL
+            status =    Fore.GREEN + str(status)    + Style.RESET_ALL
+            project =   Fore.GREEN + str(project)   + Style.RESET_ALL
+            tags =      Fore.GREEN + str(tags)      + Style.RESET_ALL
+            assigned =  Fore.GREEN + str(assigned)  + Style.RESET_ALL
+            rank =      Fore.GREEN + str(rank)      + Style.RESET_ALL
+            due =       Fore.GREEN + str(due)       + Style.RESET_ALL
+        else:
+            #id =        Style.DIM  + str(id)        + Style.RESET_ALL
+            #title =     Style.DIM  + str(title)     + Style.RESET_ALL
+            #status =    Style.DIM  + str(status)    + Style.RESET_ALL
+            #project =   Style.DIM  + str(project)   + Style.RESET_ALL
+            tags =      Style.DIM  + str(tags)      + Style.RESET_ALL
+            #assigned =  Style.DIM  + str(assigned)  + Style.RESET_ALL
+            rank =      Style.DIM  + str(rank)      + Style.RESET_ALL
+            due =       Style.DIM  + str(due)       + Style.RESET_ALL
+
         table.append([
             id,
-            task["title"],
-            task["project"],
+            title,
+            status,
+            project,
             tags,
             assigned,
-            task["rank"] if task["rank"] is not None else "",
+            rank,
             due,
         ])
     print(tabulate(table, headers=headers))
@@ -210,6 +237,21 @@ async def modify_task(id, args):
     await api.modify_task(USERNAME, id, changes)
     return 0
 
+async def change_task_status(id, status):
+    if not await api.change_task_status(USERNAME, id, status):
+        return -1
+
+    task = await api.fetch_task(id)
+    assert task is not None
+    title = task["title"]
+    if status == "start":
+        print(f"Started task {id} '{title}'")
+    elif status == "pause":
+        print(f"Paused task {id} '{title}'")
+    elif status == "stop":
+        print(f"Completed task {id} '{title}'")
+    return 0
+
 async def main():
     if len(sys.argv) == 1:
         await show_active_tasks()
@@ -237,6 +279,10 @@ async def main():
         if (errc := await modify_task(id, args)) < 0:
             return errc
         return await show_task(id)
+    elif subcmd in ["start", "pause", "stop"]:
+        status = subcmd
+        if (errc := await change_task_status(id, status)) < 0:
+            return errc
 
     return 0
 

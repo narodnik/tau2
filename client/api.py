@@ -88,3 +88,23 @@ async def modify_task(who, id, changes):
     assert "error" not in response
     assert not response["result"]
 
+async def change_task_status(who, id, status):
+    channel = await create_channel()
+    request = {
+        "id": random_id(),
+        "method": "change_task_status",
+        "params": [who, id, status],
+    }
+    await channel.send(request)
+
+    response = await channel.receive()
+    assert response is not None
+    if "error" in response:
+        error = response["error"]
+        errcode, errmsg = error["code"], error["message"]
+        print(f"error: {errcode} - {errmsg}", file=sys.stderr)
+        return False
+
+    assert not response["result"]
+    return True
+

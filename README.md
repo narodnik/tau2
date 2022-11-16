@@ -4,6 +4,7 @@ pip install:
 
 * tabulate
 * pycryptodome
+* colorama
 
 # Basic Usage
 

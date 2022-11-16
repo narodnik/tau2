@@ -72,12 +72,47 @@ async def modify_task(who, id, changes):
     print(json.dumps(task, indent=2))
     plumbing.save_task(task)
 
+async def change_task_status(who, id, status):
+    active = plumbing.load_active()
+    assert id < len(active) and active[id] != None
+    blob_idx = active[id]
+    task = plumbing.load_task(blob_idx)
+
+    old_status = task["status"]
+    print(f"Changing status for task {id} from {old_status} to {status}")
+    # Perform checks first
+    if old_status == "open":
+        if status not in ["start", "stop"]:
+            return Error(110, "invalid status change")
+    elif old_status == "start":
+        if status not in ["pause", "stop"]:
+            return Error(110, "invalid status change")
+    elif old_status == "pause":
+        if status not in ["start", "stop"]:
+            return Error(110, "invalid status change")
+    # This should not be possible
+    assert old_status != "stop"
+
+    # Change the status
+    task["status"] = status
+    plumbing.save_task(task)
+
+    # If task is stopped then archive it
+    if status == "stop":
+        active[id] = None
+        plumbing.save_active(active)
+        month = util.current_month()
+        archive = plumbing.load_archive(month)
+        archive.append(blob_idx)
+        plumbing.save_archive(month, archive)
+
 api_table = {
     "get_info": get_info,
     "add_task": add_task,
     "fetch_active_tasks": fetch_active_tasks,
     "fetch_task": fetch_task,
     "modify_task": modify_task,
+    "change_task_status": change_task_status,
 }
 
 async def call(request):
