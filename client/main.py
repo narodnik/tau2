@@ -42,18 +42,18 @@ async def add_task(task_args):
     title = " ".join(title_words)
     task["title"] = title
     if task["desc"] is None:
-        task["desc"] = read_description()
+        task["desc"] = prompt_description_text()
 
     print(json.dumps(task, indent=2))
 
     id = await api.add_task(task)
     print(f"Created task {id}.")
 
-def read_description():
+def prompt_text(comment_lines):
     temp = tempfile.NamedTemporaryFile()
     temp.write(b"\n")
-    temp.write(b"# Write task description above this line\n")
-    temp.write(b"# These lines will be removed\n")
+    for line in comment_lines:
+        temp.write(line.encode() + b"\n")
     temp.flush()
     editor = os.environ.get('EDITOR', 'nvim')
     os.system(f"{editor} {temp.name}")
@@ -63,6 +63,18 @@ def read_description():
     desc = "\n".join(line for line in desc.split("\n")
                      if line and line[0] != "#")
     return desc
+
+def prompt_description_text():
+    return prompt_for_text([
+        "# Write task description above this line",
+        "# These lines will be removed"
+    ])
+
+def prompt_comment_text():
+    return prompt_for_text([
+        "# Write comments above this line",
+        "# These lines will be removed"
+    ])
 
 def set_task_attr(task, attr, val):
     templ = lib.util.task_template
@@ -186,26 +198,42 @@ async def show_task(id):
     table = []
     for event in task["events"]:
         cmd, when, args = event[0], event[1], event[2:]
+        when = lib.util.unix_to_datetime(when)
+        when = dt.strftime("%H:%M %d/%m/%y")
         if cmd == "set":
             who, attr, val = args
             if attr == "due" and val is not None:
                 val = lib.util.unix_to_datetime(val)
                 val = dt.strftime("%H:%M %d/%m/%y")
             table.append([
-                f"{who} changed {attr} to {val}",
-                when
+                Style.DIM + f"{who} changed {attr} to {val}" + Style.RESET_ALL,
+                Style.DIM + when + Style.RESET_ALL
             ])
         elif cmd == "append":
             who, attr, val = args
             table.append([
-                f"{who} added {val} to {attr}",
-                when
+                Style.DIM + f"{who} added {val} to {attr}" + Style.RESET_ALL,
+                Style.DIM + when + Style.RESET_ALL
             ])
         elif cmd == "removed":
             who, attr, val = args
             table.append([
-                f"{who} removed {val} to {attr}",
+                Style.DIM + f"{who} removed {val} to {attr}" + Style.RESET_ALL,
+                Style.DIM + when + Style.RESET_ALL
+            ])
+        elif cmd == "comment":
+            who, comment = args
+            table.append([
+                f"{who} said:",
                 when
+            ])
+            table.append([
+                "",
+                ""
+            ])
+            table.append([
+                comment,
+                ""
             ])
     print(tabulate(table))
 
@@ -252,6 +280,21 @@ async def change_task_status(id, status):
         print(f"Completed task {id} '{title}'")
     return 0
 
+async def comment(id, args):
+    if not args:
+        comment = prompt_comment_text()
+    else:
+        comment = " ".join(args)
+
+    if not await api.add_task_comment(USERNAME, id, comment):
+        return -1
+
+    task = await api.fetch_task(id)
+    assert task is not None
+    title = task["title"]
+    print(f"Commented on task {id} '{title}'")
+    return 0
+
 async def main():
     if len(sys.argv) == 1:
         await show_active_tasks()
@@ -282,6 +325,9 @@ async def main():
     elif subcmd in ["start", "pause", "stop"]:
         status = subcmd
         if (errc := await change_task_status(id, status)) < 0:
+            return errc
+    elif subcmd == "comment":
+        if (errc := await comment(id, args)) < 0:
             return errc
 
     return 0

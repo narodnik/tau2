@@ -106,6 +106,16 @@ async def change_task_status(who, id, status):
         archive.append(blob_idx)
         plumbing.save_archive(month, archive)
 
+async def add_task_comment(who, id, comment):
+    active = plumbing.load_active()
+    assert id < len(active) and active[id] != None
+    blob_idx = active[id]
+    task = plumbing.load_task(blob_idx)
+
+    task["events"].append(["comment", lib.util.now(), who, comment])
+
+    plumbing.save_task(task)
+
 api_table = {
     "get_info": get_info,
     "add_task": add_task,
@@ -113,6 +123,7 @@ api_table = {
     "fetch_task": fetch_task,
     "modify_task": modify_task,
     "change_task_status": change_task_status,
+    "add_task_comment": add_task_comment,
 }
 
 async def call(request):

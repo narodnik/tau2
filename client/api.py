@@ -108,3 +108,23 @@ async def change_task_status(who, id, status):
     assert not response["result"]
     return True
 
+async def add_task_comment(who, id, comment):
+    channel = await create_channel()
+    request = {
+        "id": random_id(),
+        "method": "add_task_comment",
+        "params": [who, id, comment],
+    }
+    await channel.send(request)
+
+    response = await channel.receive()
+    assert response is not None
+    if "error" in response:
+        error = response["error"]
+        errcode, errmsg = error["code"], error["message"]
+        print(f"error: {errcode} - {errmsg}", file=sys.stderr)
+        return False
+
+    assert not response["result"]
+    return True
+
