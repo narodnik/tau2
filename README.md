@@ -1,3 +1,10 @@
+# Install
+
+pip install:
+
+* tabulate
+* pycryptodome
+
 # Basic Usage
 
 Run the server daemon:

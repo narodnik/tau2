@@ -4,6 +4,8 @@ import api, lib, plumbing, util
 # So we can see the goddamn exceptions
 async def handle_connect(reader, writer):
     try:
+        addr = writer.get_extra_info("peername")
+        print(f"Received connection from {addr}")
         channel = lib.net.Channel(reader, writer)
         await process(channel)
     except:
