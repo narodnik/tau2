@@ -1,3 +1,5 @@
+# Basic Usage
+
 Run the server daemon:
 
 ```
@@ -45,7 +47,17 @@ You can also modify attributes:
 $ tau modify @upgr -admin +othertag rank:12 due:0512
 ```
 
-TODO:
+# Reset and Testing
+
+```
+$ rm ~/.config/tau
+```
+
+```
+$ ./test_tau.sh
+```
+
+# TODO
 
 * add changing status: start, pause, stop commands
 * add comments to discuss tasks
