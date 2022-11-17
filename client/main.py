@@ -145,6 +145,15 @@ async def show_active_tasks():
             assigned =  Fore.GREEN + str(assigned)  + Style.RESET_ALL
             rank =      Fore.GREEN + str(rank)      + Style.RESET_ALL
             due =       Fore.GREEN + str(due)       + Style.RESET_ALL
+        elif status == "pause":
+            id =        Fore.YELLOW + str(id)        + Style.RESET_ALL
+            title =     Fore.YELLOW + str(title)     + Style.RESET_ALL
+            status =    Fore.YELLOW + str(status)    + Style.RESET_ALL
+            project =   Fore.YELLOW + str(project)   + Style.RESET_ALL
+            tags =      Fore.YELLOW + str(tags)      + Style.RESET_ALL
+            assigned =  Fore.YELLOW + str(assigned)  + Style.RESET_ALL
+            rank =      Fore.YELLOW + str(rank)      + Style.RESET_ALL
+            due =       Fore.YELLOW + str(due)       + Style.RESET_ALL
         else:
             #id =        Style.DIM  + str(id)        + Style.RESET_ALL
             #title =     Style.DIM  + str(title)     + Style.RESET_ALL
