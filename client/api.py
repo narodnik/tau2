@@ -28,12 +28,12 @@ async def get_info():
     result = response["result"]
     return result
 
-async def add_task(task):
+async def add_task(who, task):
     channel = await create_channel()
     request = {
         "id": random_id(),
         "method": "add_task",
-        "params": [task],
+        "params": [who, task],
     }
     await channel.send(request)
 

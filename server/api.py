@@ -1,6 +1,6 @@
 import json, sys
 
-import lib, plumbing, util
+import lib, pipe, plumbing, util
 
 class Error:
 
@@ -8,16 +8,26 @@ class Error:
         self.code = code
         self.msg = msg
 
+# Write a local event so IRC can update
+def notify(event):
+    message = json.dumps(event)
+    pipe.write_pipe("/tmp/tau2", message)
+
 async def get_info():
     #return Error(-110, "oopsie")
     return "Hello World"
 
-async def add_task(task):
+async def add_task(who, task):
     plumbing.save_task(task)
 
     active = plumbing.load_active()
     id = plumbing.next_free_id(active, task["blob_idx"])
     plumbing.save_active(active)
+
+    notify({
+        "update": "add_task",
+        "params": [who, id, task]
+    })
     return id
 
 async def fetch_active_tasks():
@@ -72,6 +82,11 @@ async def modify_task(who, id, changes):
     print(json.dumps(task, indent=2))
     plumbing.save_task(task)
 
+    notify({
+        "update": "modify_task",
+        "params": [who, id, changes]
+    })
+
 async def change_task_status(who, id, status):
     active = plumbing.load_active()
     assert id < len(active) and active[id] != None
@@ -106,6 +121,11 @@ async def change_task_status(who, id, status):
         archive.append(blob_idx)
         plumbing.save_archive(month, archive)
 
+    notify({
+        "update": "change_task_status",
+        "params": [who, id, status]
+    })
+
 async def add_task_comment(who, id, comment):
     active = plumbing.load_active()
     assert id < len(active) and active[id] != None
@@ -115,6 +135,11 @@ async def add_task_comment(who, id, comment):
     task["events"].append(["comment", lib.util.now(), who, comment])
 
     plumbing.save_task(task)
+
+    notify({
+        "update": "add_task_comment",
+        "params": [who, id, comment]
+    })
 
 api_table = {
     "get_info": get_info,

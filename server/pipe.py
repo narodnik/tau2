@@ -32,5 +32,11 @@ if __name__ == "__main__":
     #     $ cat /tmp/tau2
     #
     # and rerun this program.
+    # 
+    # You can also explicitly create the named pipe without relying
+    # on lazy_init:
+    #
+    #     $ mkfifo /tmp/tau2
+    #
     write_pipe("/tmp/tau2", "hello")
 

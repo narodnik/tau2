@@ -6,7 +6,10 @@ from colorama import Fore, Back, Style
 
 import api, lib
 
-USERNAME = "Anonymous"
+try:
+    USERNAME = os.environ["TAU_USERNAME"]
+except KeyError:
+    USERNAME = "Anonymous"
 
 async def add_task(task_args):
     task = {
@@ -46,7 +49,7 @@ async def add_task(task_args):
 
     print(json.dumps(task, indent=2))
 
-    id = await api.add_task(task)
+    id = await api.add_task(USERNAME, task)
     print(f"Created task {id}.")
 
 def prompt_text(comment_lines):

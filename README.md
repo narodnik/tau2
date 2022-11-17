@@ -55,6 +55,14 @@ You can also modify attributes:
 $ tau modify @upgr -admin +othertag rank:12 due:0512
 ```
 
+# Username Configuration
+
+To give yourself a username, add to `~/.bashrc` these lines:
+
+```
+export TAU_USERNAME=foo
+```
+
 # Reset and Testing
 
 ```
