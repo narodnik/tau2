@@ -1,4 +1,5 @@
 import asyncio, json, random
+import sys
 from lib.net import Channel
 
 async def create_channel():
