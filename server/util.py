@@ -13,5 +13,5 @@ def safe_open(filename, perm):
 # returns MMYY format
 def current_month():
     today = date.today()
-    return today.strftime("%d%y")
+    return today.strftime("%m%y")
 
