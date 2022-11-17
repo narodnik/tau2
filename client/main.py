@@ -55,7 +55,7 @@ def prompt_text(comment_lines):
     for line in comment_lines:
         temp.write(line.encode() + b"\n")
     temp.flush()
-    editor = os.environ.get('EDITOR', 'nvim')
+    editor = os.environ.get('EDITOR') if os.environ.get('EDITOR') else 'nano'    
     os.system(f"{editor} {temp.name}")
     desc = open(temp.name, "r").read()
     # Remove comments and empty lines from desc
@@ -65,13 +65,13 @@ def prompt_text(comment_lines):
     return desc
 
 def prompt_description_text():
-    return prompt_for_text([
+    return prompt_text([
         "# Write task description above this line",
         "# These lines will be removed"
     ])
 
 def prompt_comment_text():
-    return prompt_for_text([
+    return prompt_text([
         "# Write comments above this line",
         "# These lines will be removed"
     ])
@@ -269,6 +269,7 @@ async def change_task_status(id, status):
     if not await api.change_task_status(USERNAME, id, status):
         return -1
 
+    # TODO: fix fetching a task after it's stopped
     task = await api.fetch_task(id)
     assert task is not None
     title = task["title"]
@@ -298,6 +299,33 @@ async def comment(id, args):
 async def main():
     if len(sys.argv) == 1:
         await show_active_tasks()
+        return 0
+    
+    if sys.argv[1] == "-h":
+        print('''USAGE:
+    tau [OPTIONS] [SUBCOMMAND]
+
+OPTIONS:
+    -h, --help                   Print help information
+
+SUBCOMMANDS:
+    add        Add a new task.
+    comment    Write comment for task by id
+    modify     Modify an existing task by id
+    pause      Pause task(s)
+    start      Start task(s)
+    stop       Stop task(s)
+
+Example:
+    tau add task one due:0312 rank:1.022 project:zk +lol @sk desc:desc +abc +def
+    tau add task two  rank:1.044 project:cr +mol @up desc:desc2
+    tau add task three due:0512 project:zy +trol @kk desc:desc3 +who
+    tau 1 modify @upgr due:1112 rank:none
+    tau 1 modify -mol -xx
+    tau 2 start
+    tau 1 comment "this is an awesome comment"
+    tau 2 pause
+''')
         return 0
 
     if sys.argv[1] == "add":
