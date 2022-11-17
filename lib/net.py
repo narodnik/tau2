@@ -1,10 +1,15 @@
-import json, sys
+import json, os, sys
 from Crypto.Cipher import AES
 
-# should be 32 bytes
+# should be 32 bytes hex
 # https://pycryptodome.readthedocs.io/en/latest/src/cipher/aes.html
-KEY = bytes.fromhex(
-    "87b9b70e722d20c046c8dba8d0add1f16307fec33debffec9d001fd20dbca3ee")
+try:
+    KEY = os.environ["TAU_SHARED_SECRET"]
+    assert len(KEY) == 32
+except KeyError:
+    KEY = "87b9b70e722d20c046c8dba8d0add1f16307fec33debffec9d001fd20dbca3ee"
+
+KEY = bytes.fromhex(KEY)
 
 class Channel:
 
