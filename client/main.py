@@ -107,8 +107,9 @@ def convert_attr_val(attr, val):
     elif attr == "due":
         # Other date formats not yet supported... ez to add
         assert len(val) == 4
-        # next year we need to change 22 to 23 lol
-        dt = datetime.strptime(f"18:00 {val}22", "%H:%M %d%m%y")
+        date = datetime.now().date()
+        year = int(date.strftime("%Y"))%100
+        dt = datetime.strptime(f"18:00 {val}{year}", "%H:%M %d%m%y")
         due = lib.util.datetime_to_unix(dt)
         return due
     else:
