@@ -3,7 +3,7 @@ import sys
 from lib.net import Channel
 
 async def create_channel():
-    reader, writer = await asyncio.open_connection("127.0.0.1", 7643)
+    reader, writer = await asyncio.open_connection("dasman.xyz", 7643)
     channel = Channel(reader, writer)
     return channel
 
