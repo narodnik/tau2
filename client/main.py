@@ -340,11 +340,12 @@ OPTIONS:
 
 SUBCOMMANDS:
     add        Add a new task.
-    comment    Write comment for task by id
-    modify     Modify an existing task by id
-    pause      Pause task(s)
-    start      Start task(s)
-    stop       Stop task(s)
+    archive    Show completed tasks.
+    comment    Write comment for task by id.
+    modify     Modify an existing task by id.
+    pause      Pause task(s).
+    start      Start task(s).
+    stop       Stop task(s).
 
 Example:
     tau add task one due:0312 rank:1.022 project:zk +lol @sk desc:desc +abc +def
@@ -355,6 +356,9 @@ Example:
     tau 2 start
     tau 1 comment "this is an awesome comment"
     tau 2 pause
+    tau archive         # current month's completed tasks
+    tau archive 1122    # completed tasks in Nov. 2022
+    tau 0 archive 1122  # show info of task completed in Nov. 2022
 ''')
         return 0
     elif sys.argv[1] == "add":
