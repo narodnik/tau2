@@ -121,6 +121,13 @@ def convert_attr_val(attr, val):
 
 async def show_active_tasks():
     tasks = await api.fetch_active_tasks()
+    list_tasks(tasks)
+
+async def show_deactive_tasks(month):
+    tasks = await api.fetch_deactive_tasks(month)
+    list_tasks(tasks)
+
+def list_tasks(tasks):
     headers = ["ID", "Title", "Status", "Project",
                "Tags", "Assigned", "Rank", "Due"]
     table = []
@@ -181,6 +188,15 @@ async def show_active_tasks():
 
 async def show_task(id):
     task = await api.fetch_task(id)
+    task_table(task)
+    return 0
+
+async def show_archive_task(id, month):
+    task = await api.fetch_archive_task(id, month)
+    task_table(task)
+    return 0
+
+def task_table(task):
     tags = " ".join(f"+{tag}" for tag in task["tags"])
     assigned = " ".join(f"@{assign}" for assign in task["assigned"])
     rank = task["rank"] if task["rank"] is not None else ""
@@ -279,9 +295,6 @@ async def modify_task(id, args):
     return 0
 
 async def change_task_status(id, status):
-    if not await api.change_task_status(USERNAME, id, status):
-        return -1
-
     # TODO: fix fetching a task after it's stopped
     task = await api.fetch_task(id)
     assert task is not None
@@ -292,6 +305,10 @@ async def change_task_status(id, status):
         print(f"Paused task {id} '{title}'")
     elif status == "stop":
         print(f"Completed task {id} '{title}'")
+
+    if not await api.change_task_status(USERNAME, id, status):
+        return -1
+
     return 0
 
 async def comment(id, args):
@@ -314,7 +331,7 @@ async def main():
         await show_active_tasks()
         return 0
     
-    if sys.argv[1] == "-h":
+    if sys.argv[1] == "-h" or sys.argv[1] == "--help":
         print('''USAGE:
     tau [OPTIONS] [SUBCOMMAND]
 
@@ -340,10 +357,21 @@ Example:
     tau 2 pause
 ''')
         return 0
-
-    if sys.argv[1] == "add":
+    elif sys.argv[1] == "add":
         task_args = sys.argv[2:]
         await add_task(task_args)
+        return 0
+    elif sys.argv[1] == "archive":
+        if len(sys.argv) > 2:
+            if len(sys.argv[2]) == 4:
+                month = sys.argv[2]
+            else:
+                print("Error: month must be of format MMYY")
+                return -1
+        else:
+            month = lib.util.current_month()
+            
+        await show_deactive_tasks(month)
         return 0
 
     try:
@@ -369,6 +397,18 @@ Example:
             return errc
     elif subcmd == "comment":
         if (errc := await comment(id, args)) < 0:
+            return errc
+    elif subcmd == "archive":
+        if len(args) == 1:
+            if len(args[0]) == 4:
+                month = args[0]
+            else:
+                print("Error: month must be of format MMYY")
+                return -1
+        else:
+            month = lib.util.current_month()
+
+        if (errc := await show_archive_task(id, month)) < 0:
             return errc
 
     return 0

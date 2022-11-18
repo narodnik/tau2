@@ -60,12 +60,43 @@ async def fetch_active_tasks():
     tasks = response["result"]
     return tasks
 
+async def fetch_deactive_tasks(month):
+    channel = await create_channel()
+    request = {
+        "id": random_id(),
+        "method": "fetch_deactive_tasks",
+        "params": [month],
+    }
+    await channel.send(request)
+
+    response = await channel.receive()
+    assert response is not None
+    assert "error" not in response
+    tasks = response["result"]
+    return tasks
+
+
 async def fetch_task(task_id):
     channel = await create_channel()
     request = {
         "id": random_id(),
         "method": "fetch_task",
         "params": [task_id],
+    }
+    await channel.send(request)
+
+    response = await channel.receive()
+    assert response is not None
+    assert "error" not in response
+    task = response["result"]
+    return task
+
+async def fetch_archive_task(task_id, month):
+    channel = await create_channel()
+    request = {
+        "id": random_id(),
+        "method": "fetch_archive_task",
+        "params": [task_id, month],
     }
     await channel.send(request)
 

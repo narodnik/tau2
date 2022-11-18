@@ -9,6 +9,11 @@ def datetime_to_unix(dt):
 def now():
     return datetime_to_unix(datetime.now())
 
+# returns MMYY format
+def current_month():
+    today = datetime.today()
+    return today.strftime("%m%y")
+
 def unix_to_datetime(timestamp):
     return datetime.utcfromtimestamp(timestamp)
 

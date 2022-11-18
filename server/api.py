@@ -35,7 +35,20 @@ async def fetch_active_tasks():
     active = plumbing.load_active()
     for blob_idx in active:
         if blob_idx is None:
-            task.append(None)
+            tasks.append(None)
+            continue
+
+        task = plumbing.load_task(blob_idx)
+        tasks.append(task)
+    return tasks
+
+async def fetch_deactive_tasks(month):
+    tasks = []
+    # month = util.current_month()
+    deactive = plumbing.load_archive(month)
+    for blob_idx in deactive:
+        if blob_idx is None:
+            tasks.append(None)
             continue
 
         task = plumbing.load_task(blob_idx)
@@ -46,6 +59,13 @@ async def fetch_task(id):
     active = plumbing.load_active()
     assert id < len(active) and active[id] != None
     blob_idx = active[id]
+    task = plumbing.load_task(blob_idx)
+    return task
+
+async def fetch_archive_task(id, month):
+    archive = plumbing.load_archive(month)
+    assert id < len(archive) and archive[id] != None
+    blob_idx = archive[id]
     task = plumbing.load_task(blob_idx)
     return task
 
@@ -145,7 +165,9 @@ api_table = {
     "get_info": get_info,
     "add_task": add_task,
     "fetch_active_tasks": fetch_active_tasks,
+    "fetch_deactive_tasks": fetch_deactive_tasks,
     "fetch_task": fetch_task,
+    "fetch_archive_task": fetch_archive_task,
     "modify_task": modify_task,
     "change_task_status": change_task_status,
     "add_task_comment": add_task_comment,
