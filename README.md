@@ -83,8 +83,9 @@ $ ./test_tau.sh
 
 # TODO
 
-* add changing status: start, pause, stop commands
-* add comments to discuss tasks
+* ~~add changing status: start, pause, stop commands~~
+* ~~add comments to discuss tasks~~
 * IRC notifications
-    * push API for server
+    * ~~push API for server~~
     * create a bot which listens for events
+
