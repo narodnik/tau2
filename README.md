@@ -16,7 +16,7 @@ $ python server/main.py
 
 ```
 $ tau add read documents later
-Created task 1.
+Created task 0.
 
 $ tau add rank:4 pay bills due:1112 @john +admin +ops project:core desc:xyz
 Created task 1.
@@ -85,8 +85,8 @@ $ ./test_tau.sh
 
 * ~~add changing status: start, pause, stop commands~~
 * ~~add comments to discuss tasks~~
-* IRC notifications
+* ~~IRC notifications~~
     * ~~push API for server~~
-    * create a bot which listens for events
+    * ~~create a bot which listens for events~~
 * general testing and error handling before final deployment
 
