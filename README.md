@@ -88,4 +88,5 @@ $ ./test_tau.sh
 * IRC notifications
     * ~~push API for server~~
     * create a bot which listens for events
+* general testing before final deployment
 
