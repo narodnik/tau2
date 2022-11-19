@@ -57,35 +57,52 @@ async def fetch_deactive_tasks(month):
 
 async def fetch_task(id):
     active = plumbing.load_active()
-    assert id < len(active) and active[id] != None
+
+    try:
+        active[id]
+    except IndexError:
+        return Error(110, "invalid ID")
+
     blob_idx = active[id]
     task = plumbing.load_task(blob_idx)
     return task
 
 async def fetch_archive_task(id, month):
     archive = plumbing.load_archive(month)
-    assert id < len(archive) and archive[id] != None
+    try:
+        archive[id]
+    except IndexError:
+        return Error(110, "invalid ID")
+
     blob_idx = archive[id]
     task = plumbing.load_task(blob_idx)
     return task
 
 async def modify_task(who, id, changes):
     active = plumbing.load_active()
-    assert id < len(active) and active[id] != None
+    
+    try:
+        active[id]
+    except IndexError:
+        return Error(110, "invalid ID")
+    
     blob_idx = active[id]
     task = plumbing.load_task(blob_idx)
 
     for cmd, attr, val in changes:
         if cmd == "set":
-            assert attr in ["title", "desc", "project", "due", "rank"]
+            if not attr in ["title", "desc", "project", "due", "rank"]:
+                return Error(111, "invalid attribute")
             task[attr] = val
         elif cmd == "append":
             templ = lib.util.task_template
-            assert templ[attr] == list
+            if not templ[attr] == list:
+                return Error(110, "invalid templ")
             task[attr].append(val)
         elif cmd == "remove":
             templ = lib.util.task_template
-            assert templ[attr] == list
+            if not templ[attr] == list:
+                return Error(110, "invalid templ")
             try:
                 task[attr].remove(val)
             except ValueError:
@@ -109,7 +126,12 @@ async def modify_task(who, id, changes):
 
 async def change_task_status(who, id, status):
     active = plumbing.load_active()
-    assert id < len(active) and active[id] != None
+
+    try:
+        active[id]
+    except IndexError:
+        return Error(110, "invalid ID")
+ 
     blob_idx = active[id]
     task = plumbing.load_task(blob_idx)
 
@@ -148,7 +170,12 @@ async def change_task_status(who, id, status):
 
 async def add_task_comment(who, id, comment):
     active = plumbing.load_active()
-    assert id < len(active) and active[id] != None
+
+    try:
+        active[id]
+    except IndexError:
+        return Error(110, "invalid ID")
+
     blob_idx = active[id]
     task = plumbing.load_task(blob_idx)
 

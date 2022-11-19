@@ -41,7 +41,12 @@ async def add_task(who, task):
     # Closed connect returns None
     assert response is not None
 
-    assert "error" not in response
+    if "error" in response:
+        error = response["error"]
+        errcode, errmsg = error["code"], error["message"]
+        print(f"error: {errcode} - {errmsg}", file=sys.stderr)
+        sys.exit(-1)
+
     id = response["result"]
     return id
 
@@ -56,7 +61,13 @@ async def fetch_active_tasks():
 
     response = await channel.receive()
     assert response is not None
-    assert "error" not in response
+
+    if "error" in response:
+        error = response["error"]
+        errcode, errmsg = error["code"], error["message"]
+        print(f"error: {errcode} - {errmsg}", file=sys.stderr)
+        sys.exit(-1)
+
     tasks = response["result"]
     return tasks
 
@@ -71,7 +82,13 @@ async def fetch_deactive_tasks(month):
 
     response = await channel.receive()
     assert response is not None
-    assert "error" not in response
+
+    if "error" in response:
+        error = response["error"]
+        errcode, errmsg = error["code"], error["message"]
+        print(f"error: {errcode} - {errmsg}", file=sys.stderr)
+        sys.exit(-1)
+
     tasks = response["result"]
     return tasks
 
@@ -87,7 +104,13 @@ async def fetch_task(task_id):
 
     response = await channel.receive()
     assert response is not None
-    assert "error" not in response
+
+    if "error" in response:
+        error = response["error"]
+        errcode, errmsg = error["code"], error["message"]
+        print(f"error: {errcode} - {errmsg}", file=sys.stderr)
+        sys.exit(-1)
+
     task = response["result"]
     return task
 
@@ -102,7 +125,13 @@ async def fetch_archive_task(task_id, month):
 
     response = await channel.receive()
     assert response is not None
-    assert "error" not in response
+
+    if "error" in response:
+        error = response["error"]
+        errcode, errmsg = error["code"], error["message"]
+        print(f"error: {errcode} - {errmsg}", file=sys.stderr)
+        sys.exit(-1)
+
     task = response["result"]
     return task
 
@@ -117,7 +146,13 @@ async def modify_task(who, id, changes):
 
     response = await channel.receive()
     assert response is not None
-    assert "error" not in response
+
+    if "error" in response:
+        error = response["error"]
+        errcode, errmsg = error["code"], error["message"]
+        print(f"error: {errcode} - {errmsg}", file=sys.stderr)
+        sys.exit(-1)
+
     assert not response["result"]
 
 async def change_task_status(who, id, status):
