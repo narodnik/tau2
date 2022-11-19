@@ -246,10 +246,10 @@ def task_table(task):
                 "",
                 Style.DIM + when + Style.RESET_ALL
             ])
-        elif cmd == "removed":
+        elif cmd == "remove":
             who, attr, val = args
             table.append([
-                Style.DIM + f"{who} removed {val} to {attr}" + Style.RESET_ALL,
+                Style.DIM + f"{who} removed {val} from {attr}" + Style.RESET_ALL,
                 "",
                 Style.DIM + when + Style.RESET_ALL
             ])

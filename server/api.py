@@ -120,10 +120,11 @@ async def modify_task(who, id, changes):
             except ValueError:
                 print(f"warning: command remove {val} not in {attr}",
                       file=sys.stderr)
+                return Error(110, f"remove {val} not in {attr}")
         else:
             print(f"warning: unhandled command ({cmd}, {attr}, {val})",
                   file=sys.stderr)
-            continue
+            return Error(110, f"unhandled command ({cmd}, {attr}, {val})")
 
         task["events"].append([cmd, lib.util.now(), who, attr, val])
 
