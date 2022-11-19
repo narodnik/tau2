@@ -56,7 +56,6 @@ async def fetch_active_tasks():
 
 async def fetch_deactive_tasks(month):
     tasks = []
-    # month = util.current_month()
     deactive = plumbing.load_archive(month)
     for blob_idx in deactive:
         if blob_idx is None:
@@ -132,9 +131,11 @@ async def modify_task(who, id, changes):
     print(json.dumps(task, indent=2))
     plumbing.save_task(task)
 
+    title = task['title']
+
     notify({
         "update": "modify_task",
-        "params": [who, id, changes]
+        "params": [who, id, title, changes]
     })
 
 async def change_task_status(who, id, status):
@@ -180,9 +181,11 @@ async def change_task_status(who, id, status):
         archive.append(blob_idx)
         plumbing.save_archive(month, archive)
 
+    title = task['title']
+
     notify({
         "update": "change_task_status",
-        "params": [who, id, status]
+        "params": [who, id, title, status]
     })
 
 async def add_task_comment(who, id, comment):
@@ -200,9 +203,11 @@ async def add_task_comment(who, id, comment):
 
     plumbing.save_task(task)
 
+    title = task['title']
+
     notify({
         "update": "add_task_comment",
-        "params": [who, id, comment]
+        "params": [who, id, title, comment]
     })
 
 api_table = {
