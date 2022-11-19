@@ -231,12 +231,12 @@ def task_table(task):
     for event in task["events"]:
         cmd, when, args = event[0], event[1], event[2:]
         when = lib.util.unix_to_datetime(when)
-        when = dt.strftime("%H:%M %d/%m/%y")
+        when = when.strftime("%H:%M %d/%m/%y")
         if cmd == "set":
             who, attr, val = args
             if attr == "due" and val is not None:
                 val = lib.util.unix_to_datetime(val)
-                val = dt.strftime("%H:%M %d/%m/%y")
+                val = val.strftime("%H:%M %d/%m/%y")
             table.append([
                 Style.DIM + f"{who} changed {attr} to {val}" + Style.RESET_ALL,
                 "",
