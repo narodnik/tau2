@@ -272,10 +272,6 @@ def task_table(task):
                 comment,
                 Style.DIM + when + Style.RESET_ALL
             ])
-            #table.append([
-            #    comment,
-            #    ""
-            #])
     print(tabulate(table))
 
 async def modify_task(id, args):

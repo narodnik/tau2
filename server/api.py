@@ -2,11 +2,23 @@ import json, sys
 
 import lib, pipe, plumbing, util
 
+PROTOCOL_VERSION = 1
+
 class Error:
 
     def __init__(self, code, msg):
         self.code = code
         self.msg = msg
+
+    def as_response(self, request):
+        return {
+            "id": request["id"],
+            "result": None,
+            "error": {
+                "code": self.code,
+                "message": self.msg
+            }
+        }
 
 # Write a local event so IRC can update
 def notify(event):
@@ -205,22 +217,17 @@ api_table = {
 }
 
 async def call(request):
+    if request["protocol_version"] != PROTOCOL_VERSION:
+        error = Error(52, "wrong protocol version. Please git pull")
+        return error.as_response(request)
+
     method = request["method"]
     params = request["params"]
     func = api_table[method]
     result = await func(*params)
 
     if isinstance(result, Error):
-        errcode, errmsg = result.code, result.msg
-        response = {
-            "id": request["id"],
-            "result": None,
-            "error": {
-                "code": errcode,
-                "message": errmsg
-            }
-        }
-        return response
+        return result.as_response(request)
 
     # Normal reply
     response = {
