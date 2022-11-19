@@ -103,16 +103,19 @@ def convert_attr_val(attr, val):
         try:
             return float(val)
         except ValueError:
-            print("error: rank value isn't convertable to float",
+            print(f"error: rank value {val} isn't convertable to float",
                   file=sys.stderr)
-            print()
-            raise
+            sys.exit(-1)
     elif attr == "due":
         # Other date formats not yet supported... ez to add
         assert len(val) == 4
         date = datetime.now().date()
         year = int(date.strftime("%Y"))%100
-        dt = datetime.strptime(f"18:00 {val}{year}", "%H:%M %d%m%y")
+        try:
+            dt = datetime.strptime(f"18:00 {val}{year}", "%H:%M %d%m%y")
+        except ValueError:
+            print(f"error: unknown date format {val}")
+            sys.exit(-1)
         due = lib.util.datetime_to_unix(dt)
         return due
     else:
