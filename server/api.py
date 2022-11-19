@@ -152,6 +152,10 @@ async def change_task_status(who, id, status):
 
     # Change the status
     task["status"] = status
+
+    # Append to the event log
+    task["events"].append(["status", lib.util.now(), who, status])
+
     plumbing.save_task(task)
 
     # If task is stopped then archive it

@@ -250,6 +250,17 @@ def task_table(task):
                 Style.DIM + f"{who} removed {val} to {attr}" + Style.RESET_ALL,
                 Style.DIM + when + Style.RESET_ALL
             ])
+        elif cmd == "status":
+            who, status = args
+            if status == "pause":
+                status_verb = "paused"
+            else:
+                assert status in ["start", "stop"]
+                status_verb = f"{status}ed"
+            table.append([
+                f"{who} {status_verb} task",
+                Style.DIM + when + Style.RESET_ALL
+            ])
         elif cmd == "comment":
             who, comment = args
             table.append([
