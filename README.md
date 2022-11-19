@@ -25,17 +25,17 @@ Created task 1.
 Now view the tasks:
 
 ```
-$ ./tau
-  ID  Title                 Project    Tags         Assigned    Rank    Due
-----  --------------------  ---------  -----------  ----------  ------  --------------
-   0  read documents later
-   1  pay bills             core       +admin +ops  @john       4.0     17:00 11/12/22
+$ tau
+  ID  Title                 Status    Project    Tags         Assigned    Rank    Due
+----  --------------------  --------  ---------  -----------  ----------  ------  --------------
+   0  read documents later  open                                                  
+   1  pay bills             open      core       +admin +ops  @john       4.0     17:00 11/12/22
 ```
 
 To view a task, just use its ID:
 
 ```
-$ ./tau 1
+$ tau 1
 Attribute     Value
 ------------  --------------
 Title:        pay bills
@@ -46,14 +46,21 @@ Tags:         +admin +ops
 Assigned:     @john
 Rank:         4.0
 Due:          17:00 11/12/22
-Created:      12:17 16/11/22
+Created:      07:53 19/11/22
 ```
 
 You can also modify attributes:
 
 ```
-$ tau modify @upgr -admin +othertag rank:12 due:0512
+$ tau 1 modify @upgr -admin +othertag rank:12 due:0512
 ```
+
+This will modify task 1:
+* `@upgr`: assigns to *upgr*
+* `-admin`: removes the *admin* tag
+* `+othertag`: add the *othertag* tag,
+* `rank:12`: set the rank to 12
+* `due:0512`: set the due date to the 5th Dec
 
 # Configuration
 
@@ -74,19 +81,12 @@ It must be 32 bytes hexadecimal.
 # Reset and Testing
 
 ```
-$ rm ~/.config/tau
+$ rm ~/.config/tau/
 ```
+
+The server data is stored in `~/.config/tau/data/`.
 
 ```
 $ ./test_tau.sh
 ```
-
-# TODO
-
-* ~~add changing status: start, pause, stop commands~~
-* ~~add comments to discuss tasks~~
-* ~~IRC notifications~~
-    * ~~push API for server~~
-    * ~~create a bot which listens for events~~
-* general testing and error handling before final deployment
 

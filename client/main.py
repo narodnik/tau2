@@ -47,7 +47,7 @@ async def add_task(task_args):
     if task["desc"] is None:
         task["desc"] = prompt_description_text()
 
-    print(json.dumps(task, indent=2))
+    #print(json.dumps(task, indent=2))
 
     id = await api.add_task(USERNAME, task)
     print(f"Created task {id}.")
