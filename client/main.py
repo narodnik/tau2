@@ -236,18 +236,21 @@ def task_table(task):
                 val = dt.strftime("%H:%M %d/%m/%y")
             table.append([
                 Style.DIM + f"{who} changed {attr} to {val}" + Style.RESET_ALL,
+                "",
                 Style.DIM + when + Style.RESET_ALL
             ])
         elif cmd == "append":
             who, attr, val = args
             table.append([
                 Style.DIM + f"{who} added {val} to {attr}" + Style.RESET_ALL,
+                "",
                 Style.DIM + when + Style.RESET_ALL
             ])
         elif cmd == "removed":
             who, attr, val = args
             table.append([
                 Style.DIM + f"{who} removed {val} to {attr}" + Style.RESET_ALL,
+                "",
                 Style.DIM + when + Style.RESET_ALL
             ])
         elif cmd == "status":
@@ -259,22 +262,20 @@ def task_table(task):
                 status_verb = f"{status}ed"
             table.append([
                 f"{who} {status_verb} task",
+                "",
                 Style.DIM + when + Style.RESET_ALL
             ])
         elif cmd == "comment":
             who, comment = args
             table.append([
-                f"{who} said:",
-                when
-            ])
-            table.append([
-                "",
-                ""
-            ])
-            table.append([
+                f"{who}>",
                 comment,
-                ""
+                Style.DIM + when + Style.RESET_ALL
             ])
+            #table.append([
+            #    comment,
+            #    ""
+            #])
     print(tabulate(table))
 
 async def modify_task(id, args):

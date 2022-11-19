@@ -10,188 +10,56 @@ async def create_channel():
 def random_id():
     return random.randint(0, 2**32)
 
-async def get_info():
+async def query(method, params):
     channel = await create_channel()
     request = {
         "id": random_id(),
-        "method": "get_info",
-        "params": [],
+        "method": method,
+        "params": params,
+        "protocol_version": 1,
     }
     await channel.send(request)
 
     response = await channel.receive()
     # Closed connect returns None
-    assert response is not None
+    if response is None:
+        print("error: connection with server was closed", file=sys.stderr)
+        sys.exit(-1)
 
-    print("response:")
-    print(json.dumps(response, indent=2))
-    result = response["result"]
-    return result
+    if "error" in response:
+        error = response["error"]
+        errcode, errmsg = error["code"], error["message"]
+        print(f"error: {errcode} - {errmsg}", file=sys.stderr)
+        sys.exit(-1)
+
+    return response["result"]
+
+async def get_info():
+    return await query("get_info", [])
 
 async def add_task(who, task):
-    channel = await create_channel()
-    request = {
-        "id": random_id(),
-        "method": "add_task",
-        "params": [who, task],
-    }
-    await channel.send(request)
-
-    response = await channel.receive()
-    # Closed connect returns None
-    assert response is not None
-
-    if "error" in response:
-        error = response["error"]
-        errcode, errmsg = error["code"], error["message"]
-        print(f"error: {errcode} - {errmsg}", file=sys.stderr)
-        sys.exit(-1)
-
-    id = response["result"]
-    return id
+    return await query("add_task", [who, task])
 
 async def fetch_active_tasks():
-    channel = await create_channel()
-    request = {
-        "id": random_id(),
-        "method": "fetch_active_tasks",
-        "params": [],
-    }
-    await channel.send(request)
-
-    response = await channel.receive()
-    assert response is not None
-
-    if "error" in response:
-        error = response["error"]
-        errcode, errmsg = error["code"], error["message"]
-        print(f"error: {errcode} - {errmsg}", file=sys.stderr)
-        sys.exit(-1)
-
-    tasks = response["result"]
-    return tasks
+    return await query("fetch_active_tasks", [])
 
 async def fetch_deactive_tasks(month):
-    channel = await create_channel()
-    request = {
-        "id": random_id(),
-        "method": "fetch_deactive_tasks",
-        "params": [month],
-    }
-    await channel.send(request)
-
-    response = await channel.receive()
-    assert response is not None
-
-    if "error" in response:
-        error = response["error"]
-        errcode, errmsg = error["code"], error["message"]
-        print(f"error: {errcode} - {errmsg}", file=sys.stderr)
-        sys.exit(-1)
-
-    tasks = response["result"]
-    return tasks
-
+    return await query("fetch_deactive_tasks", [month])
 
 async def fetch_task(task_id):
-    channel = await create_channel()
-    request = {
-        "id": random_id(),
-        "method": "fetch_task",
-        "params": [task_id],
-    }
-    await channel.send(request)
-
-    response = await channel.receive()
-    assert response is not None
-
-    if "error" in response:
-        error = response["error"]
-        errcode, errmsg = error["code"], error["message"]
-        print(f"error: {errcode} - {errmsg}", file=sys.stderr)
-        sys.exit(-1)
-
-    task = response["result"]
-    return task
+    return await query("fetch_task", [task_id])
 
 async def fetch_archive_task(task_id, month):
-    channel = await create_channel()
-    request = {
-        "id": random_id(),
-        "method": "fetch_archive_task",
-        "params": [task_id, month],
-    }
-    await channel.send(request)
-
-    response = await channel.receive()
-    assert response is not None
-
-    if "error" in response:
-        error = response["error"]
-        errcode, errmsg = error["code"], error["message"]
-        print(f"error: {errcode} - {errmsg}", file=sys.stderr)
-        sys.exit(-1)
-
-    task = response["result"]
-    return task
+    return await query("fetch_archive_task", [task_id, month])
 
 async def modify_task(who, id, changes):
-    channel = await create_channel()
-    request = {
-        "id": random_id(),
-        "method": "modify_task",
-        "params": [who, id, changes],
-    }
-    await channel.send(request)
-
-    response = await channel.receive()
-    assert response is not None
-
-    if "error" in response:
-        error = response["error"]
-        errcode, errmsg = error["code"], error["message"]
-        print(f"error: {errcode} - {errmsg}", file=sys.stderr)
-        sys.exit(-1)
-
-    assert not response["result"]
+    return await query("modify_task", [who, id, changes])
 
 async def change_task_status(who, id, status):
-    channel = await create_channel()
-    request = {
-        "id": random_id(),
-        "method": "change_task_status",
-        "params": [who, id, status],
-    }
-    await channel.send(request)
-
-    response = await channel.receive()
-    assert response is not None
-    if "error" in response:
-        error = response["error"]
-        errcode, errmsg = error["code"], error["message"]
-        print(f"error: {errcode} - {errmsg}", file=sys.stderr)
-        return False
-
-    assert not response["result"]
+    await query("change_task_status", [who, id, status])
     return True
 
 async def add_task_comment(who, id, comment):
-    channel = await create_channel()
-    request = {
-        "id": random_id(),
-        "method": "add_task_comment",
-        "params": [who, id, comment],
-    }
-    await channel.send(request)
-
-    response = await channel.receive()
-    assert response is not None
-    if "error" in response:
-        error = response["error"]
-        errcode, errmsg = error["code"], error["message"]
-        print(f"error: {errcode} - {errmsg}", file=sys.stderr)
-        return False
-
-    assert not response["result"]
+    await query("add_task_comment", [who, id, comment])
     return True
 
