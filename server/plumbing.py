@@ -5,21 +5,25 @@ def save_task(task):
     blob_idx = task["blob_idx"]
     blob_prefix = blob_idx[:2]
 
-    with safe_open(f"{config_path()}/data/{blob_prefix}/{blob_idx}", "w") as f:
+    with safe_open(
+        f"{config_path()}/data/blob/{blob_prefix}/{blob_idx}", "w"
+    ) as f:
         json.dump(task, f, indent=2)
 
 def load_task(blob_idx):
     blob_prefix = blob_idx[:2]
-    with safe_open(f"{config_path()}/data/{blob_prefix}/{blob_idx}", "r") as f:
+    with safe_open(
+        f"{config_path()}/data/blob/{blob_prefix}/{blob_idx}", "r"
+    ) as f:
         return json.load(f)
 
 def save_active(active):
-    with safe_open(f"{config_path()}/active", "w") as f:
+    with safe_open(f"{config_path()}/data/active", "w") as f:
         json.dump(active, f, indent=2)
 
 def load_active():
     try:
-        with safe_open(f"{config_path()}/active", "r") as f:
+        with safe_open(f"{config_path()}/data/active", "r") as f:
             return json.load(f)
     except FileNotFoundError:
         return []
@@ -35,12 +39,12 @@ def next_free_id(active, blob_idx):
     return len(active) - 1
 
 def save_archive(month, archive):
-    with safe_open(f"{config_path()}/archive/{month}", "w") as f:
+    with safe_open(f"{config_path()}/data/archive/{month}", "w") as f:
         json.dump(archive, f, indent=2)
 
 def load_archive(month):
     try:
-        with safe_open(f"{config_path()}/archive/{month}", "r") as f:
+        with safe_open(f"{config_path()}/data/archive/{month}", "r") as f:
             return json.load(f)
     except FileNotFoundError:
         return []
