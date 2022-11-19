@@ -29,7 +29,7 @@ parser.add_argument('--pipe', default="/tmp/tau2" , help='pipe to read from')
 args = parser.parse_args()
 
 irc = IRC()
-# irc.connect(args.server, args.port, args.channel, args.nickname)
+irc.connect(args.server, args.port, args.channel, args.nickname)
 
 while True:
     with open(args.pipe) as handle:
@@ -47,7 +47,7 @@ while True:
                 assigned = ",".join(msg['params'][2]['assigned'])
                 notification = f"{user} added a new task '{title}' assigned to '{assigned}'"
                 print(notification)
-                # irc.send(args.channel, notification)
+                irc.send(args.channel, notification)
             elif cmd == "modify_task":
                 user = msg['params'][0]
                 title = msg['params'][2]
@@ -61,17 +61,10 @@ while True:
                 if len(assignees) > 0:
                     notification = f"{user} modified task '{title}', action: assigned to '{assignees}'"
                     print(notification)
-                    # irc.send(args.channel, notification)
+                    irc.send(args.channel, notification)
             elif cmd == "add_task_comment":
                 user = msg['params'][0]
                 title = msg['params'][2]
                 notification = f"{user} added a comment on task '{title}'"
                 print(notification)
-                # irc.send(args.channel, notification)
-            # elif cmd == "change_task_status":
-            #     user = msg['params'][0]
-            #     title = msg['params'][2]
-            #     state = msg['params'][3]
-            #     notification = f"{user} changed state of task '{title}' to '{state}'"
-            #     print(notification)
-            #     irc.send(args.channel, notification)
+                irc.send(args.channel, notification)
