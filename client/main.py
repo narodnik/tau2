@@ -342,7 +342,7 @@ async def main():
         await show_active_tasks()
         return 0
     
-    if sys.argv[1] == "-h" or sys.argv[1] == "--help":
+    if sys.argv[1] in ["-h", "--help", "help"]:
         print('''USAGE:
     tau [OPTIONS] [SUBCOMMAND]
 
@@ -357,6 +357,7 @@ SUBCOMMANDS:
     pause      Pause task(s).
     start      Start task(s).
     stop       Stop task(s).
+    help       Show this help text.
 
 Example:
     tau add task one due:0312 rank:1.022 project:zk +lol @sk desc:desc +abc +def
