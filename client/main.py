@@ -244,6 +244,10 @@ def task_table(task):
             ])
         elif cmd == "append":
             who, attr, val = args
+            if attr == "tags":
+                val = f"+{val}"
+            elif attr == "assigned":
+                val = f"@{val}"
             table.append([
                 Style.DIM + f"{who} added {val} to {attr}" + Style.RESET_ALL,
                 "",
@@ -251,6 +255,10 @@ def task_table(task):
             ])
         elif cmd == "remove":
             who, attr, val = args
+            if attr == "tags":
+                val = f"+{val}"
+            elif attr == "assigned":
+                val = f"@{val}"
             table.append([
                 Style.DIM + f"{who} removed {val} from {attr}" + Style.RESET_ALL,
                 "",
