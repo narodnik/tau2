@@ -9,7 +9,7 @@ class IRC:
         self.irc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def send(self, chan, msg):
-        self.irc.send(bytes("PRIVMSG " + chan + " " + msg + "\n", "UTF-8"))
+        self.irc.send(bytes("PRIVMSG " + chan + " :" + msg + "\n", "UTF-8"))
 
     def connect(self, server, port, channel, botnick):
         print("connecting to: "+server+":"+str(port))
