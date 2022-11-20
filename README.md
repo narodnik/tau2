@@ -6,6 +6,12 @@ pip install:
 * pycryptodome
 * colorama
 
+Put an alias to `client/main.py` in your `~/.bashrc`:
+
+```
+alias tau=~/src/tau2/client/main.py
+```
+
 # Basic Usage
 
 Run the server daemon:
