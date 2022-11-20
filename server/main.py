@@ -23,6 +23,9 @@ async def process(channel):
         print(json.dumps(request, indent=2))
 
         response = await api.call(request)
+        print("response:")
+        print(json.dumps(response, indent=2))
+
         await channel.send(response)
 
 def stuff():

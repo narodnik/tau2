@@ -102,6 +102,8 @@ async def modify_task(who, id, changes):
             templ = lib.util.task_template
             if not templ[attr] == list:
                 return Error(110, "invalid templ")
+            if val in task[attr]:
+                return Error(225, "adding duplicate item to list")
             task[attr].append(val)
         elif cmd == "remove":
             templ = lib.util.task_template
@@ -110,9 +112,7 @@ async def modify_task(who, id, changes):
             try:
                 task[attr].remove(val)
             except ValueError:
-                print(f"warning: command remove {val} not in {attr}",
-                      file=sys.stderr)
-                return Error(110, f"remove {val} not in {attr}")
+                return Error(226, f"remove {val} not in {attr}")
         else:
             print(f"warning: unhandled command ({cmd}, {attr}, {val})",
                   file=sys.stderr)
