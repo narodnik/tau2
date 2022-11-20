@@ -68,6 +68,38 @@ This will modify task 1:
 * `rank:12`: set the rank to 12
 * `due:0512`: set the due date to the 5th Dec
 
+# Change Status
+
+Start working on a task:
+
+```
+$ tau 0 start
+Started task 0 'read documents later'
+```
+
+Pause working on a task:
+
+```
+$ tau 0 pause
+Paused task 0 'read documents later'
+```
+
+To resume the task, simply start it again.
+
+Once you are finished, stop the task:
+
+```
+$ tau 0 stop
+Completed task 0 'read documents later'
+```
+
+Lastly to delete a task:
+
+```
+$ tau 1 cancel
+Cancelled task 1 'pay bills'
+```
+
 # Configuration
 
 To give yourself a username, add to `~/.bashrc` these lines:
