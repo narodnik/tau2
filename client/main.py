@@ -310,6 +310,10 @@ async def change_task_status(id, status):
     task = await api.fetch_task(id)
     assert task is not None
     title = task["title"]
+
+    if not await api.change_task_status(USERNAME, id, status):
+        return -1
+
     if status == "start":
         print(f"Started task {id} '{title}'")
     elif status == "pause":
@@ -318,9 +322,6 @@ async def change_task_status(id, status):
         print(f"Completed task {id} '{title}'")
     elif status == "cancel":
         print(f"Cancelled task {id} '{title}'")
-
-    if not await api.change_task_status(USERNAME, id, status):
-        return -1
 
     return 0
 
