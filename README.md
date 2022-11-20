@@ -12,6 +12,22 @@ Put an alias to `client/main.py` in your `~/.bashrc`:
 alias tau=~/src/tau2/client/main.py
 ```
 
+## Configuration
+
+To give yourself a username, add to `~/.bashrc` these lines:
+
+```
+export TAU_USERNAME=foo
+```
+
+To configure the session shared key:
+
+```
+export TAU_SHARED_SECRET="87b9b70e722d20c046c8dba8d0add1f16307fec33debffec9d001fd20dbca3ee"
+```
+
+It must be 32 bytes hexadecimal.
+
 # Basic Usage
 
 Run the server daemon:
@@ -99,22 +115,6 @@ Lastly to delete a task:
 $ tau 1 cancel
 Cancelled task 1 'pay bills'
 ```
-
-# Configuration
-
-To give yourself a username, add to `~/.bashrc` these lines:
-
-```
-export TAU_USERNAME=foo
-```
-
-To configure the session shared key:
-
-```
-export TAU_SHARED_SECRET="87b9b70e722d20c046c8dba8d0add1f16307fec33debffec9d001fd20dbca3ee"
-```
-
-It must be 32 bytes hexadecimal.
 
 # Reset and Testing
 
