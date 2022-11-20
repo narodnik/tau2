@@ -5,7 +5,7 @@ from Crypto.Cipher import AES
 # https://pycryptodome.readthedocs.io/en/latest/src/cipher/aes.html
 try:
     KEY = os.environ["TAU_SHARED_SECRET"]
-    assert len(KEY) == 32
+    assert len(KEY) == 64
 except KeyError:
     KEY = "87b9b70e722d20c046c8dba8d0add1f16307fec33debffec9d001fd20dbca3ee"
 
