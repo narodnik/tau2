@@ -384,7 +384,7 @@ Example:
             if len(sys.argv[2]) == 4:
                 month = sys.argv[2]
             else:
-                print("Error: month must be of format MMYY")
+                print("error: month must be of format MMYY")
                 return -1
         else:
             month = lib.util.current_month()
@@ -428,6 +428,9 @@ Example:
 
         if (errc := await show_archive_task(id, month)) < 0:
             return errc
+    else:
+        print(f"error: unknown subcommand '{subcmd}'")
+        return -1
 
     return 0
 

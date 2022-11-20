@@ -67,14 +67,9 @@ async def fetch_deactive_tasks(month):
     return tasks
 
 async def fetch_task(id):
-    active = plumbing.load_active()
-
-    try:
-        active[id]
-    except IndexError:
+    blob_idx = plumbing.blob_idx_from_id(id)
+    if blob_idx is None:
         return Error(110, "invalid ID")
-
-    blob_idx = active[id]
     task = plumbing.load_task(blob_idx)
     return task
 
@@ -86,18 +81,16 @@ async def fetch_archive_task(id, month):
         return Error(110, "invalid ID")
 
     blob_idx = archive[id]
+    if blob_idx is None:
+        return Error(110, "invalid ID")
     task = plumbing.load_task(blob_idx)
     return task
 
 async def modify_task(who, id, changes):
-    active = plumbing.load_active()
-    
-    try:
-        active[id]
-    except IndexError:
+    blob_idx = plumbing.blob_idx_from_id(id)
+    if blob_idx is None:
         return Error(110, "invalid ID")
-    
-    blob_idx = active[id]
+
     task = plumbing.load_task(blob_idx)
 
     for cmd, attr, val in changes:
@@ -139,14 +132,10 @@ async def modify_task(who, id, changes):
     })
 
 async def change_task_status(who, id, status):
-    active = plumbing.load_active()
-
-    try:
-        active[id]
-    except IndexError:
+    blob_idx = plumbing.blob_idx_from_id(id)
+    if blob_idx is None:
         return Error(110, "invalid ID")
- 
-    blob_idx = active[id]
+
     task = plumbing.load_task(blob_idx)
 
     old_status = task["status"]
@@ -189,14 +178,10 @@ async def change_task_status(who, id, status):
     })
 
 async def add_task_comment(who, id, comment):
-    active = plumbing.load_active()
-
-    try:
-        active[id]
-    except IndexError:
+    blob_idx = plumbing.blob_idx_from_id(id)
+    if blob_idx is None:
         return Error(110, "invalid ID")
 
-    blob_idx = active[id]
     task = plumbing.load_task(blob_idx)
 
     task["events"].append(["comment", lib.util.now(), who, comment])

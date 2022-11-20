@@ -48,3 +48,19 @@ def load_archive(month):
             return json.load(f)
     except FileNotFoundError:
         return []
+
+# Finds the blob's index from its active ID
+def blob_idx_from_id(id):
+    active = load_active()
+
+    try:
+        active[id]
+    except IndexError:
+        return None
+
+    blob_idx = active[id]
+    if blob_idx is None:
+        return None
+
+    return blob_idx
+
