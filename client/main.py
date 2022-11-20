@@ -102,7 +102,7 @@ def set_task_attr(task, attr, val):
 def convert_attr_val(attr, val):
     templ = lib.util.task_template
 
-    if attr in ["desc", "project"]:
+    if attr in ["desc", "project", "title"]:
         assert templ[attr] == str
         return val
     elif attr == "rank":
