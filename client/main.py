@@ -316,6 +316,8 @@ async def change_task_status(id, status):
         print(f"Paused task {id} '{title}'")
     elif status == "stop":
         print(f"Completed task {id} '{title}'")
+    elif status == "cancel":
+        print(f"Cancelled task {id} '{title}'")
 
     if not await api.change_task_status(USERNAME, id, status):
         return -1
@@ -407,7 +409,7 @@ Example:
         if (errc := await modify_task(id, args)) < 0:
             return errc
         return await show_task(id)
-    elif subcmd in ["start", "pause", "stop"]:
+    elif subcmd in ["start", "pause", "stop", "cancel"]:
         status = subcmd
         if (errc := await change_task_status(id, status)) < 0:
             return errc

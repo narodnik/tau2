@@ -153,16 +153,16 @@ async def change_task_status(who, id, status):
     print(f"Changing status for task {id} from {old_status} to {status}")
     # Perform checks first
     if old_status == "open":
-        if status not in ["start", "stop"]:
+        if status not in ["start", "stop", "cancel"]:
             return Error(110, "invalid status change")
     elif old_status == "start":
-        if status not in ["pause", "stop"]:
+        if status not in ["pause", "stop", "cancel"]:
             return Error(110, "invalid status change")
     elif old_status == "pause":
-        if status not in ["start", "stop"]:
+        if status not in ["start", "stop", "cancel"]:
             return Error(110, "invalid status change")
     # This should not be possible
-    assert old_status != "stop"
+    assert old_status not in ["stop", "cancel"]
 
     # Change the status
     task["status"] = status
@@ -173,7 +173,7 @@ async def change_task_status(who, id, status):
     plumbing.save_task(task)
 
     # If task is stopped then archive it
-    if status == "stop":
+    if status in ["stop", "cancel"]:
         active[id] = None
         plumbing.save_active(active)
         month = util.current_month()
