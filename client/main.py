@@ -32,9 +32,15 @@ async def add_task(task_args):
     for arg in task_args:
         if arg[0] == "+":
             tag = arg[1:]
+            if tag in task["tags"]:
+                print(f"error: duplicate tag +{tag} in task", file=sys.stderr)
+                sys.exit(-1)
             task["tags"].append(tag)
         elif arg[0] == "@":
             assign = arg[1:]
+            if assign in task["assigned"]:
+                print(f"error: duplicate assigned @{assign} in task", file=sys.stderr)
+                sys.exit(-1)
             task["assigned"].append(assign)
         elif ":" in arg:
             attr, val = arg.split(":", 1)
@@ -266,11 +272,16 @@ def task_table(task):
             ])
         elif cmd == "status":
             who, status = args
+            assert status not in ["stop", "cancel"]
             if status == "pause":
                 status_verb = "paused"
-            else:
-                assert status in ["start", "stop"]
+            elif status == "start":
                 status_verb = f"{status}ed"
+            else:
+                print(f"internal error: unhandled task state {status}",
+                      file=sys.stderr)
+                sys.exit(-2)
+
             table.append([
                 f"{who} {status_verb} task",
                 "",

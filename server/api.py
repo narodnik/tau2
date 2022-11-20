@@ -163,6 +163,7 @@ async def change_task_status(who, id, status):
 
     # If task is stopped then archive it
     if status in ["stop", "cancel"]:
+        active = plumbing.load_active()
         active[id] = None
         plumbing.save_active(active)
         month = util.current_month()
