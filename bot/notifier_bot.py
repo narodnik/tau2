@@ -46,9 +46,9 @@ while True:
                 title = msg['params'][2]['title']
                 assigned = ",".join(msg['params'][2]['assigned'])
                 if len(assigned) > 0:
-                    notification = f"{user} added a new task '{title}' assigned to @{assigned}"
+                    notification = f"{user} added task '{title}' assigned to @{assigned}"
                 else:
-                    notification = f"{user} added a new task '{title}'"
+                    notification = f"{user} added task '{title}'"
                 print(notification)
                 irc.send(args.channel, notification)
             elif cmd == "modify_task":
