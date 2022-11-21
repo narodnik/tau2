@@ -80,6 +80,21 @@ This will modify task 1:
 
 You can also use the keyword `none` for rank and due.
 
+## Filters
+
+You can filter the tasks using the `show` subcommand:
+
+```
+$ tau show +dev @john
+```
+
+This will show all the tasks tagged by `+dev` assigned to `@john`.
+Whereas to show all `ops` projects you could do:
+
+```
+$ tau show project:ops
+```
+
 ## Change Status
 
 Start working on a task:
