@@ -450,10 +450,8 @@ Example:
         await show_deactive_tasks(month)
         return 0
     elif sys.argv[1] == "show":
-        print(sys.argv)
         if len(sys.argv) > 2:
             filters = sys.argv[2:]
-            print(filters)
             tasks = await api.fetch_active_tasks()
             filtered_tasks = apply_filters(tasks, filters)
             list_tasks(filtered_tasks)
