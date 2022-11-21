@@ -80,6 +80,16 @@ This will modify task 1:
 
 You can also use the keyword `none` for rank and due.
 
+Comment on a task:
+
+```
+# Short one line comment
+$ tau 0 comment hello world!!!
+
+# For longer comments. This will open your EDITOR
+$ tau 0 comment
+```
+
 ## Filters
 
 You can filter the tasks using the `show` subcommand:
