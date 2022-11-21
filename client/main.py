@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import asyncio, json, os, sys, tempfile
+import re
 from datetime import datetime
 from tabulate import tabulate
 from colorama import Fore, Back, Style
@@ -193,7 +194,11 @@ def list_tasks(tasks):
             rank,
             due,
         ])
-    print(tabulate(table, headers=headers))
+    print(tabulate(sorted(table, key=lambda item:(strip_ansi(item[6]), -int(strip_ansi(item[0]))), reverse=True), headers=headers))
+
+def strip_ansi(source):
+    source = str(source)
+    return re.sub(r'\033\[(\d|;)+?m', '', source)
 
 async def show_task(id):
     task = await api.fetch_task(id)
