@@ -1,6 +1,5 @@
 #!/usr/bin/python
 import asyncio, json, os, sys, tempfile
-import re
 from datetime import datetime
 from tabulate import tabulate
 from colorama import Fore, Back, Style
@@ -140,7 +139,7 @@ async def show_deactive_tasks(month):
 def list_tasks(tasks):
     headers = ["ID", "Title", "Status", "Project",
                "Tags", "Assigned", "Rank", "Due"]
-    table = []
+    table_rows = []
     for id, task in enumerate(tasks):
         if task is None:
             continue
@@ -154,6 +153,7 @@ def list_tasks(tasks):
         else:
             dt = lib.util.unix_to_datetime(task["due"])
             due = dt.strftime("%H:%M %d/%m/%y")
+
         rank = task["rank"] if task["rank"] is not None else ""
 
         if status == "start":
@@ -184,7 +184,8 @@ def list_tasks(tasks):
             rank =      Style.DIM  + str(rank)      + Style.RESET_ALL
             due =       Style.DIM  + str(due)       + Style.RESET_ALL
 
-        table.append([
+        rank_value = task["rank"] if task["rank"] is not None else 0
+        row = [
             id,
             title,
             status,
@@ -193,12 +194,12 @@ def list_tasks(tasks):
             assigned,
             rank,
             due,
-        ])
-    print(tabulate(sorted(table, key=lambda item:(strip_ansi(item[6]), -int(strip_ansi(item[0]))), reverse=True), headers=headers))
+        ]
+        table_rows.append((rank_value, row))
 
-def strip_ansi(source):
-    source = str(source)
-    return re.sub(r'\033\[(\d|;)+?m', '', source)
+    table = [row for (_, row) in
+             sorted(table_rows, key=lambda item: item[0], reverse=True)]
+    print(tabulate(table, headers=headers))
 
 async def show_task(id):
     task = await api.fetch_task(id)
