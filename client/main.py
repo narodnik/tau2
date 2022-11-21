@@ -364,11 +364,44 @@ async def comment(id, args):
     print(f"Commented on task {id} '{title}'")
     return 0
 
+def apply_filters(tasks, filters):
+    tasks = [i for i in tasks if i is not None]
+    filtered_tasks = tasks
+    for fltr in filters:
+        if fltr.startswith("+"):
+            tag = fltr[1:]
+            filtered_tasks = list(filter(lambda x: tag in x['tags'], filtered_tasks))
+        elif fltr.startswith("@"):
+            assign = fltr[1:]
+            filtered_tasks = list(filter(lambda x: assign in x['assigned'], filtered_tasks))
+        elif ":" in fltr:
+            attr, val = fltr.split(":", 1)
+            if val.lower() == "none":
+                if attr not in ["project", "rank", "due"]:
+                    print(f"error: invalid you cannot set {attr} to none",
+                            file=sys.stderr)
+                    return -1
+                val = None
+                filtered_tasks = list(filter(lambda x: val == x[attr], filtered_tasks))
+            elif attr.lower() == "status" :
+                if val not in ["open", "start", "pause"]:
+                    print(f"error: invalid, filter by {attr} can only be [\"open\", \"start\", \"pause\"]",
+                            file=sys.stderr)
+                    return -1
+                filtered_tasks = list(filter(lambda x: val == x[attr], filtered_tasks))
+            else:
+                val = convert_attr_val(attr, val)
+            filtered_tasks = list(filter(lambda x: val == x[attr], filtered_tasks))
+        else:
+            print(f"warning: unknown arg '{fltr}'. Skipping...", file=sys.stderr)
+
+    return filtered_tasks
+
 async def main():
     if len(sys.argv) == 1:
         await show_active_tasks()
         return 0
-    
+
     if sys.argv[1] in ["-h", "--help", "help"]:
         print('''USAGE:
     tau [OPTIONS] [SUBCOMMAND]
@@ -413,8 +446,19 @@ Example:
                 return -1
         else:
             month = lib.util.current_month()
-            
+
         await show_deactive_tasks(month)
+        return 0
+    elif sys.argv[1] == "show":
+        print(sys.argv)
+        if len(sys.argv) > 2:
+            filters = sys.argv[2:]
+            print(filters)
+            tasks = await api.fetch_active_tasks()
+            filtered_tasks = apply_filters(tasks, filters)
+            list_tasks(filtered_tasks)
+        else:
+            await show_active_tasks()
         return 0
 
     try:
