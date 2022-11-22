@@ -295,14 +295,35 @@ def task_table(task):
                 "",
                 Style.DIM + when + Style.RESET_ALL
             ])
-        elif cmd == "comment":
+    print(tabulate(table))
+
+    table = []
+    for event in task['events']:
+        cmd, when, args = event[0], event[1], event[2:]
+        when = lib.util.unix_to_datetime(when)
+        when = when.strftime("%H:%M %d/%m/%y")
+        if cmd == "comment":
             who, comment = args
             table.append([
                 f"{who}>",
-                comment,
+                wrap_comment(comment, 25),
                 Style.DIM + when + Style.RESET_ALL
             ])
+    if len(table) > 0:
+        print("Comments:")
     print(tabulate(table))
+
+def wrap_comment(comment, width):
+    lines = []
+    line_start = 0
+    for i, char in enumerate(comment):
+        if char == ' ' and (i - line_start >= width):
+            lines.append(comment[line_start:i + 1])
+            line_start = i + 1
+
+    if line_start < len(comment):
+        lines.append(comment[line_start:])
+    return '\n'.join(lines)
 
 async def modify_task(id, args):
     changes = []
