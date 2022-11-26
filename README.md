@@ -137,7 +137,7 @@ That's everything!
 ## Multiple Instances
 
 You can modify `TAU_CONFIG` to switch between multiple instances
-of tau for different organizations, or even alias the tau task:
+of tau for different organizations, or even alias the tau command:
 
 ```
 alias tau_home="TAU_CONFIG=~/.config/tau/tau_home.toml tau"
