@@ -6,10 +6,7 @@ from colorama import Fore, Back, Style
 
 import api, lib
 
-try:
-    USERNAME = os.environ["TAU_USERNAME"]
-except KeyError:
-    USERNAME = "Anonymous"
+USERNAME = lib.config.get("username", "Anonymous")
 
 async def add_task(task_args):
     task = {

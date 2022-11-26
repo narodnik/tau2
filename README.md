@@ -5,6 +5,7 @@ pip install:
 * tabulate
 * pycryptodome
 * colorama
+* toml
 
 Put an alias to `client/main.py` in your `~/.bashrc`:
 
@@ -14,19 +15,8 @@ alias tau=~/src/tau2/client/main.py
 
 ## Configuration
 
-To give yourself a username, add to `~/.bashrc` these lines:
-
-```
-export TAU_USERNAME=foo
-```
-
-To configure the session shared key:
-
-```
-export TAU_SHARED_SECRET="87b9b70e722d20c046c8dba8d0add1f16307fec33debffec9d001fd20dbca3ee"
-```
-
-It must be 32 bytes hexadecimal.
+Copy `tau.sample.toml` to `~/.config/tau/tau.toml` and
+edit the file accordingly.
 
 # Usage
 
@@ -105,6 +95,9 @@ Whereas to show all `ops` projects you could do:
 $ tau show project:ops
 ```
 
+This will show all projects starting with `ops` such as `ops.media`
+or `ops.foo`. Projects should be organized in a hierarchy.
+
 ## Change Status
 
 Start working on a task:
@@ -141,8 +134,14 @@ That's everything!
 
 # Advanced Stuff
 
-Users can ignore the sections below.
-This is mainly for tau dev.
+## Multiple Instances
+
+You can modify `TAU_CONFIG` to switch between multiple instances
+of tau for different organizations, or even alias the tau task:
+
+```
+alias tau_home="TAU_CONFIG=~/.config/tau/tau_home.toml tau"
+```
 
 ## Running a Server
 
