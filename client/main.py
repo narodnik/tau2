@@ -386,12 +386,15 @@ def is_filtered(task, filters):
                     sys.exit(-1)
                 if task[attr] is not None:
                     return True
-            elif attr.lower() == "status" :
+            elif attr == "status" :
                 if val not in ["open", "start", "pause"]:
                     print(f"error: invalid, filter by {attr} can only be [\"open\", \"start\", \"pause\"]",
                             file=sys.stderr)
                     sys.exit(-1)
-                if task[attr] != val:
+                if task["status"] != val:
+                    return True
+            elif attr == "project":
+                if not task["project"].startswith(val):
                     return True
             else:
                 val = convert_attr_val(attr, val)
