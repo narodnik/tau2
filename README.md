@@ -145,6 +145,12 @@ alias tau_home="TAU_CONFIG=~/.config/tau/tau_home.toml tau"
 
 ## Running a Server
 
+Generate a shared secret:
+
+```
+$ python generate_secret.py
+```
+
 This is only for deploying your own instance or testing.
 Otherwise use the server already provided.
 
