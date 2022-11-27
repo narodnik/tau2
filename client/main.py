@@ -391,6 +391,8 @@ def is_filtered(task, filters):
                 if task["status"] != val:
                     return True
             elif attr == "project":
+                if task["project"] is None:
+                    return True
                 if not task["project"].startswith(val):
                     return True
             else:
