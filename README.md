@@ -152,16 +152,14 @@ $ python generate_secret.py
 ```
 
 This is only for deploying your own instance or testing.
-Otherwise use the server already provided.
+
+Then add the shared secret to your config file.
 
 Run the server daemon:
 
 ```
 $ python server/main.py
 ```
-
-You also need to edit `client/api.py` where it has the server string
-and point it to your server.
 
 ## Reset and Testing
 
