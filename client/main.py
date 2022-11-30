@@ -144,7 +144,7 @@ def list_tasks(tasks, filters):
             continue
         title = task["title"]
         status = task["status"]
-        project = task["project"]
+        project = task["project"] if task["project"] is not None else ""
         tags = " ".join(f"+{tag}" for tag in task["tags"])
         assigned = " ".join(f"@{assign}" for assign in task["assigned"])
         if task["due"] is None:
