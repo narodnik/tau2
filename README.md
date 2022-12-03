@@ -58,15 +58,16 @@ Created:      07:53 19/11/22
 You can also modify attributes:
 
 ```
-$ tau 1 modify @upgr -admin +othertag rank:12 due:0512
+$ tau 1 modify @upgr -admin +othertag rank:12 due:0512 -@john
 ```
 
 This will modify task 1:
 * `@upgr`: assigns to *upgr*
 * `-admin`: removes the *admin* tag
-* `+othertag`: add the *othertag* tag,
+* `+othertag`: add the *othertag* tag
 * `rank:12`: set the rank to 12
 * `due:0512`: set the due date to the 5th Dec
+* `-@john`: removes john from the assigned list
 
 You can also use the keyword `none` for rank and due.
 
