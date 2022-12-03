@@ -307,6 +307,10 @@ async def modify_task(id, args):
         if arg[0] == "+":
             tag = arg[1:]
             changes.append(("append", "tags", tag))
+        # This must go before the next elif block
+        elif arg.startswith("-@"):
+            assign = arg[2:]
+            changes.append(("remove", "assigned", assign))
         elif arg[0] == "-":
             tag = arg[1:]
             changes.append(("remove", "tags", tag))
