@@ -65,10 +65,13 @@ def prompt_text(comment_lines):
     os.system(f"{editor} {temp.name}")
     desc = open(temp.name, "r").read()
     # Remove comments and empty lines from desc
-    # TODO: this will also strip blank lines.
-    desc = "\n".join(line for line in desc.split("\n")
-                     if line and line[0] != "#")
-    return desc
+    cleaned = []
+    for line in desc.split("\n"):
+        if line.startswith("#"):
+            continue
+        cleaned.append(line)
+
+    return "\n".join(cleaned)
 
 def prompt_description_text():
     return prompt_text([
