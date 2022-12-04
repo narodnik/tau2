@@ -46,6 +46,9 @@ async def add_task(task_args):
             title_words.append(arg)
 
     title = " ".join(title_words)
+    if len(title) == 0:
+        print("Error: Title is required")
+        exit(-1)
     task["title"] = title
     if task["desc"] is None:
         task["desc"] = prompt_description_text()
