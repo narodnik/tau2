@@ -68,13 +68,18 @@ while True:
             elif cmd == "add_task_comment":
                 user = msg['params'][0]
                 title = msg['params'][2]
-                notification = f"{user} added a comment on task '{title}'"
+                notification = f"{user} commented on task '{title}'"
                 print(notification)
                 irc.send(args.channel, notification)
             elif cmd == "change_task_status":
                 user = msg['params'][0]
                 title = msg['params'][2]
                 state = msg['params'][3]
-                notification = f"{user} changed state of task '{title}' to '{state}'"
+                if state == "start":
+                    notification = f"{user} started task '{title}'"
+                elif state == "pause":
+                    notification = f"{user} paused task '{title}'"
+                elif state == "stop":
+                    notification = f"{user} stopped task '{title}'"
                 print(notification)
                 irc.send(args.channel, notification)
