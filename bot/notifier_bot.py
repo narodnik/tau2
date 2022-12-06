@@ -21,9 +21,9 @@ class IRC:
 # parse arguments
 parser = argparse.ArgumentParser(description='IRC bot to send a pipe to an IRC channel')
 parser.add_argument('--server',default='127.0.0.1', help='IRC server')
-parser.add_argument('--port', default=11066, help='port of the IRC server')
+parser.add_argument('--port', default=11070, help='port of the IRC server')
 parser.add_argument('--nickname', help='bot nickname in IRC')
-parser.add_argument('--channel', default="#dev", action='append', help='channel to join')
+parser.add_argument('--channel', default="#test", action='append', help='channel to join')
 parser.add_argument('--pipe', default="/tmp/tau2" , help='pipe to read from')
 
 args = parser.parse_args()
@@ -43,16 +43,18 @@ while True:
             
             if cmd == "add_task":
                 user = msg['params'][0]
+                id = msg['params'][1]
                 title = msg['params'][2]['title']
                 assigned = ",".join(msg['params'][2]['assigned'])
                 if len(assigned) > 0:
-                    notification = f"{user} added task '{title}' assigned to @{assigned}"
+                    notification = f"{user} added task ({id}): '{title}' assigned to @{assigned}"
                 else:
-                    notification = f"{user} added task '{title}'"
+                    notification = f"{user} added task ({id}): '{title}'"
                 print(notification)
                 irc.send(args.channel, notification)
             elif cmd == "modify_task":
                 user = msg['params'][0]
+                id = msg['params'][1]
                 title = msg['params'][2]
                 action = msg['params'][3]
                 assignees = []
@@ -62,24 +64,26 @@ while True:
 
                 assignees = ",".join(assignees)
                 if len(assignees) > 0:
-                    notification = f"{user} modified task '{title}', action: assigned to @{assignees}"
+                    notification = f"{user} modified task ({id}): '{title}', action: assigned to @{assignees}"
                     print(notification)
                     irc.send(args.channel, notification)
             elif cmd == "add_task_comment":
                 user = msg['params'][0]
+                id = msg['params'][1]
                 title = msg['params'][2]
-                notification = f"{user} commented on task '{title}'"
+                notification = f"{user} commented on task ({id}): '{title}'"
                 print(notification)
                 irc.send(args.channel, notification)
             elif cmd == "change_task_status":
                 user = msg['params'][0]
+                id = msg['params'][1]
                 title = msg['params'][2]
                 state = msg['params'][3]
                 if state == "start":
-                    notification = f"{user} started task '{title}'"
+                    notification = f"{user} started task ({id}): '{title}'"
                 elif state == "pause":
-                    notification = f"{user} paused task '{title}'"
+                    notification = f"{user} paused task ({id}): '{title}'"
                 elif state == "stop":
-                    notification = f"{user} stopped task '{title}'"
+                    notification = f"{user} stopped task ({id}): '{title}'"
                 print(notification)
                 irc.send(args.channel, notification)
