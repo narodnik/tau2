@@ -85,5 +85,7 @@ while True:
                     notification = f"{user} paused task ({id}): '{title}'"
                 elif state == "stop":
                     notification = f"{user} stopped task ({id}): '{title}'"
+                elif state == "cancel":
+                    notification = f"{user} canceled task ({id}): '{title}'"
                 print(notification)
                 irc.send(args.channel, notification)
