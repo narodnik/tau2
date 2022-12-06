@@ -21,9 +21,9 @@ class IRC:
 # parse arguments
 parser = argparse.ArgumentParser(description='IRC bot to send a pipe to an IRC channel')
 parser.add_argument('--server',default='127.0.0.1', help='IRC server')
-parser.add_argument('--port', default=11070, help='port of the IRC server')
+parser.add_argument('--port', default=11066, help='port of the IRC server')
 parser.add_argument('--nickname', help='bot nickname in IRC')
-parser.add_argument('--channel', default="#test", action='append', help='channel to join')
+parser.add_argument('--channel', default="#dev", action='append', help='channel to join')
 parser.add_argument('--pipe', default="/tmp/tau2" , help='pipe to read from')
 
 args = parser.parse_args()
