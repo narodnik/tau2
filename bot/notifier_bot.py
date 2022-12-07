@@ -47,9 +47,9 @@ while True:
                 title = msg['params'][2]['title']
                 assigned = ",".join(msg['params'][2]['assigned'])
                 if len(assigned) > 0:
-                    notification = f"{user} added task ({id}): '{title}' assigned to @{assigned}"
+                    notification = f"{user} added task ({id}): {title} assigned to @{assigned}"
                 else:
-                    notification = f"{user} added task ({id}): '{title}'"
+                    notification = f"{user} added task ({id}): {title}"
                 print(notification)
                 irc.send(args.channel, notification)
             elif cmd == "modify_task":
@@ -64,14 +64,14 @@ while True:
 
                 assignees = ",".join(assignees)
                 if len(assignees) > 0:
-                    notification = f"{user} modified task ({id}): '{title}', action: assigned to @{assignees}"
+                    notification = f"{user} modified task ({id}): {title}, action: assigned to @{assignees}"
                     print(notification)
                     irc.send(args.channel, notification)
             elif cmd == "add_task_comment":
                 user = msg['params'][0]
                 id = msg['params'][1]
                 title = msg['params'][2]
-                notification = f"{user} commented on task ({id}): '{title}'"
+                notification = f"{user} commented on task ({id}): {title}"
                 print(notification)
                 irc.send(args.channel, notification)
             elif cmd == "change_task_status":
@@ -80,12 +80,12 @@ while True:
                 title = msg['params'][2]
                 state = msg['params'][3]
                 if state == "start":
-                    notification = f"{user} started task ({id}): '{title}'"
+                    notification = f"{user} started task ({id}): {title}"
                 elif state == "pause":
-                    notification = f"{user} paused task ({id}): '{title}'"
+                    notification = f"{user} paused task ({id}): {title}"
                 elif state == "stop":
-                    notification = f"{user} stopped task ({id}): '{title}'"
+                    notification = f"{user} stopped task ({id}): {title}"
                 elif state == "cancel":
-                    notification = f"{user} canceled task ({id}): '{title}'"
+                    notification = f"{user} canceled task ({id}): {title}"
                 print(notification)
                 irc.send(args.channel, notification)
