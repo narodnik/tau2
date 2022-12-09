@@ -24,7 +24,7 @@ async def add_task(task_args):
         "events": [],
     }
     # Everything that isn't an attribute is part of the title
-    # Open text editor is desc isn't set to write desc text
+    # Open text editor if desc isn't set to write desc text
     title_words = []
     for arg in task_args:
         if arg[0] == "+":
@@ -51,7 +51,11 @@ async def add_task(task_args):
         exit(-1)
     task["title"] = title
     if task["desc"] is None:
-        task["desc"] = prompt_description_text()
+        task["desc"] = prompt_description_text(task)
+    
+    if task["desc"].strip() == '':
+        print("Abort adding the task due to empty description.")
+        exit(-1)
 
     #print(json.dumps(task, indent=2))
 
@@ -70,16 +74,23 @@ def prompt_text(comment_lines):
     # Remove comments and empty lines from desc
     cleaned = []
     for line in desc.split("\n"):
+        if line == "# ------------------------ >8 ------------------------":
+            break
         if line.startswith("#"):
             continue
         cleaned.append(line)
 
     return "\n".join(cleaned)
 
-def prompt_description_text():
+def prompt_description_text(task):
     return prompt_text([
-        "# Write task description above this line",
-        "# These lines will be removed"
+        "# Write task description above this line.",
+        "# These lines will be removed.",
+        "# An empty description aborts adding the task",
+        "\n# ------------------------ >8 ------------------------",
+        "# Do not modify or remove the line above.",
+        "# Everything below it will be ignored.",
+        f"\n{tabulate_task(task)}"
     ])
 
 def prompt_comment_text():
@@ -216,7 +227,7 @@ async def show_archive_task(id, month):
     task_table(task)
     return 0
 
-def task_table(task):
+def tabulate_task(task):
     tags = " ".join(f"+{tag}" for tag in task["tags"])
     assigned = " ".join(f"@{assign}" for assign in task["assigned"])
     rank = task["rank"] if task["rank"] is not None else ""
@@ -241,7 +252,10 @@ def task_table(task):
         ["Due:", due],
         ["Created:", created],
     ]
-    print(tabulate(table, headers=["Attribute", "Value"]))
+    return tabulate(table, headers=["Attribute", "Value"])
+
+def task_table(task):
+    print(tabulate_task(task))
     #print(json.dumps(task, indent=2))
 
     table = []
@@ -340,7 +354,6 @@ async def modify_task(id, args):
     return 0
 
 async def change_task_status(id, status):
-    # TODO: fix fetching a task after it's stopped
     task = await api.fetch_task(id)
     assert task is not None
     title = task["title"]
