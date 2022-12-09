@@ -45,9 +45,9 @@ while True:
                 user = msg['params'][0]
                 id = msg['params'][1]
                 title = msg['params'][2]['title']
-                assigned = ",".join(msg['params'][2]['assigned'])
+                assigned = ", @".join(msg['params'][2]['assigned'])
                 if len(assigned) > 0:
-                    notification = f"{user} added task ({id}): {title} assigned to @{assigned}"
+                    notification = f"{user} added task ({id}): {title}. assigned to @{assigned}"
                 else:
                     notification = f"{user} added task ({id}): {title}"
                 print(notification)
@@ -62,7 +62,7 @@ while True:
                     if act[1] == "assigned":
                         assignees.append(act[2])
 
-                assignees = ",".join(assignees)
+                assignees = ", @".join(assignees)
                 if len(assignees) > 0:
                     notification = f"{user} modified task ({id}): {title}, action: assigned to @{assignees}"
                     print(notification)
