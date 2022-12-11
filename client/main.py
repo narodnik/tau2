@@ -297,11 +297,13 @@ def task_table(task):
             ])
         elif cmd == "status":
             who, status = args
-            assert status not in ["stop", "cancel"]
+            # assert status not in ["stop", "cancel"]
             if status == "pause":
                 status_verb = "paused"
-            elif status == "start":
+            elif status in ["start", "cancel"]:
                 status_verb = f"{status}ed"
+            elif status == "stop":
+                status_verb = f"stopped"
             else:
                 print(f"internal error: unhandled task state {status}",
                       file=sys.stderr)
@@ -323,7 +325,7 @@ def task_table(task):
             who, comment = args
             table.append([
                 f"{who}>",
-                wrap_comment(comment, 25),
+                wrap_comment(comment, 58),
                 Style.DIM + when + Style.RESET_ALL
             ])
     if len(table) > 0:
