@@ -58,13 +58,21 @@ while True:
                 title = msg['params'][2]
                 action = msg['params'][3]
                 assignees = []
+                removed_assignees = []
                 for act in action:
-                    if act[1] == "assigned":
+                    if act[0] == "append":
                         assignees.append(act[2])
+                    if act[0] == "remove":
+                        removed_assignees.append(act[2])
 
                 assignees = ", @".join(assignees)
                 if len(assignees) > 0:
                     notification = f"{user} modified task ({id}): {title}, action: assigned to @{assignees}"
+                    print(notification)
+                    irc.send(args.channel, notification)
+                removed_assignees = ", @".join(removed_assignees)
+                if len(removed_assignees) > 0:
+                    notification = f"{user} modified task ({id}): {title}, action: removed @{removed_assignees}"
                     print(notification)
                     irc.send(args.channel, notification)
             elif cmd == "add_task_comment":
