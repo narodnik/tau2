@@ -60,10 +60,11 @@ while True:
                 assignees = []
                 removed_assignees = []
                 for act in action:
-                    if act[0] == "append":
-                        assignees.append(act[2])
-                    if act[0] == "remove":
-                        removed_assignees.append(act[2])
+                    if act[1] == "assigned":
+                        if act[0] == "append":
+                            assignees.append(act[2])
+                        if act[0] == "remove":
+                            removed_assignees.append(act[2])
 
                 assignees = ", @".join(assignees)
                 if len(assignees) > 0:
