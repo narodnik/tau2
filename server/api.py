@@ -36,10 +36,13 @@ async def add_task(who, task):
     id = plumbing.next_free_id(active, task["blob_idx"])
     plumbing.save_active(active)
 
-    notify({
-        "update": "add_task",
-        "params": [who, id, task]
-    })
+    project = task['project'] if task['project'] is not None else []
+
+    if not ('ops' in project or 'ops' in task['tags']):
+        notify({
+            "update": "add_task",
+            "params": [who, id, task]
+        })
     return id
 
 async def fetch_active_tasks():
@@ -126,10 +129,13 @@ async def modify_task(who, id, changes):
 
     title = task['title']
 
-    notify({
-        "update": "modify_task",
-        "params": [who, id, title, changes]
-    })
+    project = task['project'] if task['project'] is not None else []
+
+    if not ('ops' in project or 'ops' in task['tags']):
+        notify({
+            "update": "modify_task",
+            "params": [who, id, title, changes]
+        })
 
 async def change_task_status(who, id, status):
     blob_idx = plumbing.blob_idx_from_id(id)
@@ -172,11 +178,13 @@ async def change_task_status(who, id, status):
         plumbing.save_archive(month, archive)
 
     title = task['title']
+    project = task['project'] if task['project'] is not None else []
 
-    notify({
-        "update": "change_task_status",
-        "params": [who, id, title, status]
-    })
+    if not ('ops' in project or 'ops' in task['tags']):
+        notify({
+            "update": "change_task_status",
+            "params": [who, id, title, status]
+        })
 
 async def add_task_comment(who, id, comment):
     blob_idx = plumbing.blob_idx_from_id(id)
@@ -190,11 +198,13 @@ async def add_task_comment(who, id, comment):
     plumbing.save_task(task)
 
     title = task['title']
+    project = task['project'] if task['project'] is not None else []
 
-    notify({
-        "update": "add_task_comment",
-        "params": [who, id, title, comment]
-    })
+    if not ('ops' in project or 'ops' in task['tags']):
+        notify({
+            "update": "add_task_comment",
+            "params": [who, id, title, comment]
+        })
 
 api_table = {
     "get_info": get_info,
