@@ -36,10 +36,7 @@ async def add_task(who, task):
     id = plumbing.next_free_id(active, task["blob_idx"])
     plumbing.save_active(active)
 
-    project = task['project'] if task['project'] is not None else []
-
-    if not ('ops' in project or 'ops' in task['tags']):
-        notify({
+    notify({
             "update": "add_task",
             "params": [who, id, task]
         })
@@ -127,14 +124,9 @@ async def modify_task(who, id, changes):
     print(json.dumps(task, indent=2))
     plumbing.save_task(task)
 
-    title = task['title']
-
-    project = task['project'] if task['project'] is not None else []
-
-    if not ('ops' in project or 'ops' in task['tags']):
-        notify({
+    notify({
             "update": "modify_task",
-            "params": [who, id, title, changes]
+            "params": [who, id, task, changes]
         })
 
 async def change_task_status(who, id, status):
@@ -177,13 +169,9 @@ async def change_task_status(who, id, status):
         archive.append(blob_idx)
         plumbing.save_archive(month, archive)
 
-    title = task['title']
-    project = task['project'] if task['project'] is not None else []
-
-    if not ('ops' in project or 'ops' in task['tags']):
-        notify({
+    notify({
             "update": "change_task_status",
-            "params": [who, id, title, status]
+            "params": [who, id, task, status]
         })
 
 async def add_task_comment(who, id, comment):
@@ -197,13 +185,9 @@ async def add_task_comment(who, id, comment):
 
     plumbing.save_task(task)
 
-    title = task['title']
-    project = task['project'] if task['project'] is not None else []
-
-    if not ('ops' in project or 'ops' in task['tags']):
-        notify({
+    notify({
             "update": "add_task_comment",
-            "params": [who, id, title, comment]
+            "params": [who, id, task, comment]
         })
 
 api_table = {
