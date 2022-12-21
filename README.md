@@ -1,11 +1,9 @@
 # Install
 
-pip install:
-
-* tabulate
-* pycryptodome
-* colorama
-* toml
+Dependencies installation:
+```
+$ pip install -r requirements.txt
+```
 
 Put an alias to `client/main.py` in your `~/.bashrc`:
 
