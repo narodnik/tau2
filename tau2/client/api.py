@@ -1,11 +1,11 @@
 import asyncio, json, random
 import sys
 
-import lib.config
-from lib.net import Channel
+from tau2.lib import config
+from tau2.lib.net import Channel
 
 async def create_channel():
-    server_name = lib.config.get("server", "localhost")
+    server_name = config.get("server", "localhost")
     reader, writer = await asyncio.open_connection(server_name, 7643)
     channel = Channel(reader, writer)
     return channel

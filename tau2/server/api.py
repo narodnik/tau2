@@ -1,6 +1,7 @@
 import json, sys
 
-import lib, pipe, plumbing, util
+from tau2 import lib
+import pipe, plumbing, util
 
 PROTOCOL_VERSION = 1
 
