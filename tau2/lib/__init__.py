@@ -1,2 +1,3 @@
-import lib.config, lib.net, lib.util
-
+from . import config
+from . import net
+from . import util
