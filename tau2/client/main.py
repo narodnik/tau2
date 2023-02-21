@@ -1,10 +1,11 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import asyncio, json, os, sys, tempfile
 from datetime import datetime
 from tabulate import tabulate
 from colorama import Fore, Back, Style
 
-import api, lib
+from tau2.client import api
+from tau2 import lib
 
 USERNAME = lib.config.get("username", "Anonymous")
 
@@ -52,7 +53,7 @@ async def add_task(task_args):
     task["title"] = title
     if task["desc"] is None:
         task["desc"] = prompt_description_text(task)
-    
+
     if task["desc"].strip() == '':
         print("Abort adding the task due to empty description.")
         exit(-1)
@@ -68,7 +69,7 @@ def prompt_text(comment_lines):
     for line in comment_lines:
         temp.write(line.encode() + b"\n")
     temp.flush()
-    editor = os.environ.get('EDITOR') if os.environ.get('EDITOR') else 'nano'    
+    editor = os.environ.get('EDITOR') if os.environ.get('EDITOR') else 'nano'
     os.system(f"{editor} {temp.name}")
     desc = open(temp.name, "r").read()
     # Remove comments and empty lines from desc

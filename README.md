@@ -11,6 +11,12 @@ Put an alias to `client/main.py` in your `~/.bashrc`:
 alias tau=~/src/tau2/client/main.py
 ```
 
+Or install the package (and the `tau` command):
+
+```
+./setup.py install
+```
+
 ## Configuration
 
 Copy `tau.sample.toml` to `~/.config/tau/tau.toml` and
@@ -32,7 +38,7 @@ Now view the tasks:
 $ tau
   ID  Title                 Status    Project    Tags         Assigned    Rank    Due
 ----  --------------------  --------  ---------  -----------  ----------  ------  --------------
-   0  read documents later  open                                                  
+   0  read documents later  open
    1  pay bills             open      core       +admin +ops  @john       4.0     17:00 11/12/22
 ```
 
